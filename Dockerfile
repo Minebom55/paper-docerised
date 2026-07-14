@@ -1,7 +1,9 @@
 FROM ubuntu:latest
 
 ENV MC_VERSION="1.21.1"
-ENV MC_RAM=""
+
+#amount in GB minimum 1Gb
+ENV MC_RAM="1" 
 
 WORKDIR /docker
 
@@ -11,3 +13,4 @@ RUN sed -i 's/\r//' startmc.sh && apt-get update && apt-get install -y curl open
 EXPOSE 25565
 
 CMD ["/bin/bash", "./startmc.sh"]
+
