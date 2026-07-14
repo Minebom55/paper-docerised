@@ -1,11 +1,23 @@
 services:
-  mcserver1:
+  survival:
     build: .
     volumes:
-      - ./server:/docker/server
+      - ./mcserver/survival:/docker/server
     ports:
       - '25565:25565'
     environment:
+      - port=25565
       - MC_VERSION=1.21.11
       #amount in GB minimum 1Gb
-      - MC_RAM=8
+      - MC_RAM=4
+  creative:
+    build: .
+    volumes:
+      - ./mcserver/creative:/docker/server
+    ports:
+      - '25566:25566'
+    environment:
+      - port=25566
+      - MC_VERSION=1.21.11
+      #amount in GB minimum 1Gb
+      - MC_RAM=4
