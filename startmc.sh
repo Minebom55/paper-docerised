@@ -93,5 +93,21 @@ white-list=false
 " > server.properties
 fi
 
+#Plugin installation
+rm -f ./plugins/*.jar
+
+
+loaders=$(printf '["paper"]' | jq -sRr @uri)
+versions=$(printf '["%s"]' "$MC_VERSION" | jq -sRr @uri)
+versiondata=$(curl -s "https://api.modrinth.com/v3/project/$PROJECT_ID/version?loaders=$loaders&game_versions=$versions&limit=1")
+pluginurl=$(echo "$versiondata" | jq -r '.[0].files[0].url')
+filename=$(echo "$versiondata" | jq -r '.[0].files[0].filename')
+if [ -z "$pluginurl" ] || [ "$pluginurl" = "null" ]; then
+    echo "No compatible version found"
+    exit 1
+fi
+curl -fsSL "$pluginurl" -o "plugins/$filename"
+
+
 RAM=${MC_RAM:-2}
-exec java -Xmx${RAM}G -Xms1G -jar paper.jar nogui
+su exec java -Xmx${RAM}G -Xms1G -jar paper.jar nogui

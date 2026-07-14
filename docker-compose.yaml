@@ -7,9 +7,10 @@ services:
       - '25565:25565'
     environment:
       - port=25565
-      - MC_VERSION=1.21.11
+      - MC_VERSION=26.1.1
       #amount in GB minimum 1Gb
       - MC_RAM=4
+      - PROJECT_ID=Vebnzrzj
   creative:
     build: .
     volumes:
