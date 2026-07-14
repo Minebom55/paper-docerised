@@ -1,0 +1,8 @@
+services:
+  mcserver:
+    build: .
+    ports:
+      - '25565:25565'
+    environment:
+      - MC_VERSION=1.21.11
+      - MC_RAM=
