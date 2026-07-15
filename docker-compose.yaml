@@ -5,20 +5,26 @@ services:
       - ./mcserver/survival:/docker/server
     ports:
       - '25565:25565'
+      - '25575:25575'
     environment:
       - port=25565
+      - rcon_port=25575
       - MC_VERSION=26.1.1
       #amount in GB minimum 1Gb
       - MC_RAM=4
       - PROJECT_ID=Vebnzrzj
+      
   creative:
     build: .
     volumes:
       - ./mcserver/creative:/docker/server
     ports:
       - '25566:25566'
+      - '25576:25576'
     environment:
       - port=25566
+      - rcon_port=25576
       - MC_VERSION=1.21.11
       #amount in GB minimum 1Gb
       - MC_RAM=4
+      - PROJECT_ID=Vebnzrzj

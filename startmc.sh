@@ -32,7 +32,7 @@ difficulty=easy
 enable-code-of-conduct=false
 enable-jmx-monitoring=false
 enable-query=false
-enable-rcon=false
+enable-rcon=true
 enable-status=true
 enforce-secure-profile=true
 enforce-whitelist=false
@@ -71,8 +71,8 @@ player-idle-timeout=0
 prevent-proxy-connections=false
 query.port=25565
 rate-limit=0
-rcon.password=
-rcon.port=25575
+rcon.password=changeMe
+rcon.port=${rcon_port}
 region-file-compression=deflate
 require-resource-pack=false
 resource-pack=
@@ -110,4 +110,4 @@ curl -fsSL "$pluginurl" -o "plugins/$filename"
 
 
 RAM=${MC_RAM:-2}
-su exec java -Xmx${RAM}G -Xms1G -jar paper.jar nogui
+exec java -Xmx${RAM}G -Xms1G -jar paper.jar nogui
