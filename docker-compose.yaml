@@ -9,10 +9,11 @@ services:
     environment:
       - port=25565
       - rcon_port=25575
-      - MC_VERSION=26.1.1
+      - MC_VERSION=26.1.2
       #amount in GB minimum 1Gb
       - MC_RAM=4
-      - PROJECT_ID=Vebnzrzj
+      - PROJECT_ID=
+      - MODRINTH_PROJECTS=Vebnzrzj,P1OZGk5p,GM9AuKjX
       
   creative:
     build: .
@@ -27,4 +28,5 @@ services:
       - MC_VERSION=1.21.11
       #amount in GB minimum 1Gb
       - MC_RAM=4
-      - PROJECT_ID=Vebnzrzj
+      - PROJECT_ID=
+      - MODRINTH_PROJECTS=Vebnzrzj,P1OZGk5p,GM9AuKjX,1u6JkXh5

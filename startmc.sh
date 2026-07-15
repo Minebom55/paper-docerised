@@ -96,18 +96,31 @@ fi
 #Plugin installation
 rm -f ./plugins/*.jar
 
+plugin_ids="${MODRINTH_PROJECTS:-$PROJECT_ID}"
 
-loaders=$(printf '["paper"]' | jq -sRr @uri)
-versions=$(printf '["%s"]' "$MC_VERSION" | jq -sRr @uri)
-versiondata=$(curl -s "https://api.modrinth.com/v3/project/$PROJECT_ID/version?loaders=$loaders&game_versions=$versions&limit=1")
-pluginurl=$(echo "$versiondata" | jq -r '.[0].files[0].url')
-filename=$(echo "$versiondata" | jq -r '.[0].files[0].filename')
-if [ -z "$pluginurl" ] || [ "$pluginurl" = "null" ]; then
-    echo "No compatible version found"
-    exit 1
+if [ -n "$plugin_ids" ]; then
+    IFS=',' read -r -a ids <<< "$plugin_ids"
+    for project_id in "${ids[@]}"; do
+        project_id="$(echo "$project_id" | xargs)"
+        [ -z "$project_id" ] && continue
+
+        echo "Downloading Modrinth plugin: $project_id"
+        loaders=$(printf '["paper"]' | jq -sRr @uri)
+        versions=$(printf '["%s"]' "$MC_VERSION" | jq -sRr @uri)
+        versiondata=$(curl -fsSL -s "https://api.modrinth.com/v3/project/$project_id/version?loaders=$loaders&game_versions=$versions&limit=1")
+        pluginurl=$(echo "$versiondata" | jq -r '.[0].files[0].url')
+        filename=$(echo "$versiondata" | jq -r '.[0].files[0].filename')
+
+        if [ -z "$pluginurl" ] || [ "$pluginurl" = "null" ]; then
+            echo "No compatible version found for $project_id"
+            continue
+        fi
+
+        curl -fsSL "$pluginurl" -o "plugins/$filename"
+    done
+else
+    echo "No Modrinth plugin IDs provided"
 fi
-curl -fsSL "$pluginurl" -o "plugins/$filename"
-
 
 RAM=${MC_RAM:-2}
 exec java -Xmx${RAM}G -Xms1G -jar paper.jar nogui

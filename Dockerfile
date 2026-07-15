@@ -9,6 +9,7 @@ ENV port=25565
 ENV rcon_port=25575
 
 ENV PROJECT_ID="Vebnzrzj"
+ENV MODRINTH_PROJECTS="Vebnzrzj"
 
 WORKDIR /docker
 
