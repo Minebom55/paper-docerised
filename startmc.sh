@@ -113,6 +113,7 @@ if [ -n "$plugin_ids" ]; then
 
         if [ -z "$pluginurl" ] || [ "$pluginurl" = "null" ]; then
             echo "No compatible version found for $project_id"
+            exit 1 #comment out this line if you want to skip plugins that don't have a compatible version
             continue
         fi
 
