@@ -7,6 +7,9 @@ services:
       - '25565:25565'
       - '25575:25575'
     environment:
+    #Set to false to disable the server
+      - enabled="true"
+    
       - port=25565
       - rcon_port=25575
       - MC_VERSION=1.21.11
@@ -23,6 +26,9 @@ services:
       - '25566:25566'
       - '25576:25576'
     environment:
+    #Set to false to disable the server
+      - enabled="false"
+
       - port=25566
       - rcon_port=25576
       - MC_VERSION=1.21.11

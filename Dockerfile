@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+ENV enabled="true"
 
 ENV MC_VERSION="1.21.1"
 

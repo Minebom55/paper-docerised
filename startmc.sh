@@ -6,6 +6,13 @@ set -euo pipefail
 #fi
 
 cd server
+enabled="${enabled%\"}"
+enabled="${enabled#\"}"
+echo "${enabled}"
+if [ "${enabled}" == "false" ]; then
+    echo "Server is disabled. Exiting."
+    exit 0
+fi
 
 paper_url=$(curl -s "https://fill.papermc.io/v3/projects/paper/versions/${MC_VERSION}/builds/latest" | jq -r '.downloads["server:default"].url')
 
