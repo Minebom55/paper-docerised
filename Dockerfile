@@ -18,7 +18,7 @@ COPY startmc.sh .
 RUN sed -i 's/\r//' startmc.sh && apt-get update && apt-get install -y curl openjdk-25-jre jq && chmod +x startmc.sh
 
 EXPOSE ${port}
-EXPOSE 25575
+EXPOSE ${rcon_port}
 
 CMD ["/bin/bash", "./startmc.sh"]
 
