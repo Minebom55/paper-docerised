@@ -8,6 +8,7 @@ services:
       - '25575:25575'
     environment:
     #Set to false to disable the server
+    #Also comment out port and rcon_port above
       - enabled="true"
     
       - port=25565
@@ -27,6 +28,7 @@ services:
       - '25576:25576'
     environment:
     #Set to false to disable the server
+    #Also comment out port and rcon_port above
       - enabled="false"
 
       - port=25566
