@@ -111,19 +111,23 @@ if [ -n "$plugin_ids" ]; then
         project_id="$(echo "$project_id" | xargs)"
         [ -z "$project_id" ] && continue
 
-        echo "Downloading Modrinth plugin: $project_id"
+        echo "Checking Modrinth plugin: $project_id"
         loaders=$(printf '["paper"]' | jq -sRr @uri)
         versions=$(printf '["%s"]' "$MC_VERSION" | jq -sRr @uri)
         versiondata=$(curl -fsSL -s "https://api.modrinth.com/v3/project/$project_id/version?loaders=$loaders&game_versions=$versions&limit=1")
         pluginurl=$(echo "$versiondata" | jq -r '.[0].files[0].url')
         filename=$(echo "$versiondata" | jq -r '.[0].files[0].filename')
+        returned_versions=$(echo "$versiondata" | jq -r '.[0].game_versions | join(",")')
 
-        if [ -z "$pluginurl" ] || [ "$pluginurl" = "null" ]; then
+        if [ -z "$pluginurl" ] || [ "$pluginurl" = "null" ] || [ -z "$returned_versions" ] || ! echo ",$returned_versions," | grep -q ",${MC_VERSION},"; then
             echo "No compatible version found for $project_id"
+            echo "  Requested MC version: $MC_VERSION"
+            echo "  Returned game versions: ${returned_versions:-none}"
             exit 1 #comment out this line if you want to skip plugins that don't have a compatible version
             continue
         fi
 
+        echo "Downloading compatible plugin: $project_id"
         curl -fsSL "$pluginurl" -o "plugins/$filename"
     done
 else
