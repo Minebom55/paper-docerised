@@ -24,7 +24,7 @@ fi
 rm -f ./*.jar
 curl -fsSL "$paper_url" -o paper.jar
 
-if [ ! -e eula.txt ]; then
+if [ ! -e eula.txt ] || [ ! -e server.properties] ; then
     java -Xmx${RAM:-2}G -Xms1G -jar paper.jar nogui
     echo "eula=true" > eula.txt
     echo "#Minecraft server properties
@@ -67,11 +67,11 @@ management-server-tls-keystore=
 management-server-tls-keystore-password=
 max-chained-neighbor-updates=1000000
 max-players=20
-max-tick-time=60000
+max-tick-time=60000 
 max-world-size=29999984
 motd=A Minecraft Server
 network-compression-threshold=256
-online-mode=true
+online-mode=falses
 op-permission-level=4
 pause-when-empty-seconds=-1
 player-idle-timeout=0
