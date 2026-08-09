@@ -11,7 +11,7 @@ services:
     #Also comment out port and rcon_port above
       - enabled="true"
 
-      - velocity_secret=osmjc1ePCtyo #Replace with your actual secret key for Velocity
+      - velocity_secret= #Replace with your actual secret key for Velocity
     
       - reset_properties="true"
       - reset_paper_config="true"
@@ -35,7 +35,7 @@ services:
     #Also comment out port and rcon_port above
       - enabled="true"
 
-      - velocity_secret=osmjc1ePCtyo #Replace with your actual secret key for Velocity. located in mcseerver/velocity/forwarding.secret
+      - velocity_secret= #Replace with your actual secret key for Velocity. located in mcseerver/velocity/forwarding.secret
 
       - reset_properties="true"
       - reset_paper_config="true"
