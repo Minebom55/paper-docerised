@@ -8,13 +8,63 @@ set -euo pipefail
 cd server
 enabled="${enabled%\"}"
 enabled="${enabled#\"}"
+
 echo "${enabled}"
 if [ "${enabled}" == "false" ]; then
     echo "Server is disabled. Exiting."
     exit 0
 fi
 
-velocity_url=$(curl -s "https://fill.papermc.io/v3/projects/velocity/versions/${velocity_version}/builds/latestt" | jq -r '.downloads["server:default"].url')
+#Automatic server port configuration
+servers_ports="${servers_ports%\"}"
+servers_ports="${servers_ports#\"}"
+
+if [ -z "${servers_ports:-}" ]; then
+    echo "Error: servers_ports is not set or empty" >&2
+    exit 1
+fi
+
+servers_block=""
+try_lines=""
+IFS=',' read -r -a server_entries <<< "$servers_ports"
+for entry in "${server_entries[@]}"; do
+    entry="${entry#${entry%%[![:space:]]*}}"
+    entry="${entry%${entry##*[![:space:]]}}"
+
+    if [ -z "$entry" ]; then
+        continue
+    fi
+
+    if ! echo "$entry" | grep -q ':'; then
+        echo "Error: invalid servers_ports entry '$entry'. Expected format name:port" >&2
+        exit 1
+    fi
+
+    name="${entry%%:*}"
+    port="${entry#*:}"
+
+    if [ -z "$name" ] || [ -z "$port" ]; then
+        echo "Error: invalid servers_ports entry '$entry'. Expected format name:port" >&2
+        exit 1
+    fi
+
+    if ! printf '%s' "$port" | grep -qE '^[0-9]+$'; then
+        echo "Error: invalid port '$port' for server '$name'. Port must be numeric." >&2
+        exit 1
+    fi
+
+    servers_block="${servers_block}${name} = \"127.0.0.1:${port}\"\n"
+    try_lines="${try_lines}    \"${name}\",\n"
+done
+
+if [ -z "$servers_block" ]; then
+    echo "Error: servers_ports must contain at least one valid name:port pair" >&2
+    exit 1
+fi
+
+try_lines="${try_lines%,\n}"
+
+velocity_url=$(curl -s "https://fill.papermc.io/v3/projects/velocity/versions/${velocity_version}/builds/latest" | jq -r '.downloads["server:default"].url')
 
 if [ -z "$velocity_url" ] || [ "$velocity_url" = "null" ]; then
     echo "Failed to resolve Paper download URL for version ${MC_VERSION}" >&2
@@ -23,8 +73,9 @@ fi
 
 rm -f ./*.jar
 curl -fsSL "$velocity_url" -o velocity.jar
-if [ ! -f velocity.toml]; then
-echo "# Config version. Do not change this
+if [ ! -f velocity.toml ]; then
+cat > velocity.toml <<EOF
+# Config version. Do not change this
 config-version = "2.8"
 
 # What port should the proxy be bound to? By default, we'll bind to all addresses on port 25565.
@@ -114,15 +165,11 @@ bytes-per-second = -1
 decompressed-bytes-per-second = 5242880
 
 [servers]
-# Configure your servers here. Each key represents the server's name, and the value
-# represents the IP address of the server to connect to.
-lobby = "127.0.0.1:30066"
-factions = "127.0.0.1:30067"
-minigames = "127.0.0.1:30068"
+$(printf '%b' "$servers_block")
 
 # In what order we should try servers when a player logs in or is kicked from a server.
 try = [
-    "lobby"
+$(printf '%b' "$try_lines")
 ]
 
 [forced-hosts]
@@ -228,10 +275,20 @@ map = "Velocity"
 
 # Whether plugins should be shown in query response by default or not
 show-plugins = false
-" > velocity.toml
+
+[servers]
+$(printf '%b' "$servers_block")
+
+try = [
+$(printf '%b' "$try_lines")
+]
+EOF
 fi
 
 #Plugin installation
+if [ ! -f ./plugins ]; then
+    mkdir -p ./plugins
+fi
 rm -f ./plugins/*.jar
 
 plugin_ids="${MODRINTH_PROJECTS:-$PROJECT_ID}"
@@ -243,7 +300,7 @@ if [ -n "$plugin_ids" ]; then
         [ -z "$project_id" ] && continue
 
         echo "Checking Modrinth plugin: $project_id"
-        loaders=$(printf '["paper"]' | jq -sRr @uri)
+        loaders=$(printf '["velocity"]' | jq -sRr @uri)
         versions=$(printf '["%s"]' "$MC_VERSION" | jq -sRr @uri)
         versiondata=$(curl -fsSL -s "https://api.modrinth.com/v3/project/$project_id/version?loaders=$loaders&game_versions=$versions&limit=1")
         pluginurl=$(echo "$versiondata" | jq -r '.[0].files[0].url')
@@ -259,6 +316,7 @@ if [ -n "$plugin_ids" ]; then
         fi
 
         echo "Downloading compatible plugin: $project_id"
+        #echo "plugin URL: $pluginurl, filename: $filename" #Debuging
         curl -fsSL "$pluginurl" -o "plugins/$filename"
     done
 else

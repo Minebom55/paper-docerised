@@ -2,8 +2,9 @@ FROM ubuntu:latest
 ENV enabled="true"
 
 ENV velocity_version="4.0.0"
+ENV MC_VERSION="1.21.11"
 
-ENV servers_ports="25565,25575"
+ENV servers_ports="survival:25567,creative:25566"
 
 #amount in GB minimum 1Gb
 ENV MC_RAM="1" 
