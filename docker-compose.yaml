@@ -65,7 +65,7 @@ services:
 #      - rcon_port=25576
       - MC_VERSION=1.21.11
       - velocity_version=4.0.0
-      #amount in GB minimum 1Gb
-      - MC_RAM=4
+      #amount in GB minimum 0.5Gb
+      - MC_RAM=0.5
       - PROJECT_ID=
       - MODRINTH_PROJECTS=P1OZGk5p,Vebnzrzj
