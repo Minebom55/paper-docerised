@@ -56,7 +56,7 @@ for entry in "${server_entries[@]}"; do
         exit 1
     fi
 
-    servers_block="${servers_block}${name} = \"${name}:${port}\"\n"
+    servers_block="${servers_block}${name} = \"${name}:25565\"\n"
     try_lines="${try_lines}    \"${name}\",\n"
 done
 

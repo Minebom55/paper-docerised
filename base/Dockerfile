@@ -7,6 +7,7 @@ ENV MC_VERSION="1.21.1"
 #amount in GB minimum 1Gb
 ENV MC_RAM="1" 
 
+ENV reset_properties="true"
 ENV reset_paper_config="true"
 ENV port=25565
 ENV rcon_port=25575

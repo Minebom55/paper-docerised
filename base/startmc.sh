@@ -5,6 +5,9 @@ set -euo pipefail
 #    mkdir -p server
 #fi
 
+reset_properties="${reset_properties%\"}"
+reset_properties="${reset_properties#\"}"
+
 reset_paper_config="${reset_paper_config%\"}"
 reset_paper_config="${reset_paper_config#\"}"
 
@@ -27,9 +30,19 @@ fi
 rm -f ./*.jar
 curl -fsSL "$paper_url" -o paper.jar
 
-if [ ! -e eula.txt ] || [ ! -e server.properties] ; then
+if [ "${reset_properties}" = "true" ]; then
+    echo "Resetting server.properties as requested."
+    rm -f server.properties
+else
+    echo "server.properties reset not requested. Keeping existing configuration."
+fi
+
+if [ ! -e eula.txt ]; then
     java -Xmx${RAM:-2}G -Xms1G -jar paper.jar nogui
     echo "eula=true" > eula.txt
+fi
+
+if [ ! -e server.properties ]; then
     echo "#Minecraft server properties
 #Tue Jul 14 19:59:01 UTC 2026
 accepts-transfers=false

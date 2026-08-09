@@ -4,7 +4,7 @@ services:
     volumes:
       - ./mcserver/survival:/docker/server
     ports:
-      - '25567:25567'
+      #- '25567:25567'
       - '25575:25575'
     environment:
     #Set to false to disable the server
@@ -13,8 +13,9 @@ services:
 
       - velocity_secret=osmjc1ePCtyo #Replace with your actual secret key for Velocity
     
+      - reset_properties="true"
       - reset_paper_config="true"
-      - port=25567
+      - server_port=25565
       - rcon_port=25575
       - MC_VERSION=1.21.11
       #amount in GB minimum 1Gb
@@ -27,7 +28,7 @@ services:
     volumes:
       - ./mcserver/creative:/docker/server
     ports:
-      - '25566:25566'
+      #- '25566:25566'
       - '25576:25576'
     environment:
     #Set to false to disable the server
@@ -36,8 +37,9 @@ services:
 
       - velocity_secret=osmjc1ePCtyo #Replace with your actual secret key for Velocity. located in mcseerver/velocity/forwarding.secret
 
+      - reset_properties="true"
       - reset_paper_config="true"
-      - server_port=25566
+      - server_port=25565
       - rcon_port=25576
       - MC_VERSION=1.21.11
       #amount in GB minimum 1Gb
@@ -58,7 +60,7 @@ services:
       - reset_toml="true"
       - enabled="true"
 
-      - servers_ports=survival:25567,creative:25566
+      - servers_ports=survival:25565,creative:25565
       - port=25565
 #      - rcon_port=25576
       - MC_VERSION=1.21.11
