@@ -5,6 +5,9 @@ set -euo pipefail
 #    mkdir -p server
 #fi
 
+reset_toml="${reset_toml%\"}"
+reset_toml="${reset_toml#\"}"
+
 cd server
 enabled="${enabled%\"}"
 enabled="${enabled#\"}"
@@ -53,7 +56,7 @@ for entry in "${server_entries[@]}"; do
         exit 1
     fi
 
-    servers_block="${servers_block}${name} = \"127.0.0.1:${port}\"\n"
+    servers_block="${servers_block}${name} = \"${name}:${port}\"\n"
     try_lines="${try_lines}    \"${name}\",\n"
 done
 
@@ -73,13 +76,20 @@ fi
 
 rm -f ./*.jar
 curl -fsSL "$velocity_url" -o velocity.jar
+if [ "${reset_toml}" = "true" ]; then
+    echo "Resetting velocity.toml as requested."
+    rm -f velocity.toml
+else
+    echo "Not resetting velocity.toml."
+fi
 if [ ! -f velocity.toml ]; then
+
 cat > velocity.toml <<EOF
 # Config version. Do not change this
 config-version = "2.8"
 
 # What port should the proxy be bound to? By default, we'll bind to all addresses on port 25565.
-bind = "0.0.0.0:${port}"
+bind = "0.0.0.0:${server_port}"
 
 # What should be the MOTD? This gets displayed when the player adds your server to
 # their server list. Only MiniMessage format is accepted.
@@ -174,15 +184,15 @@ $(printf '%b' "$try_lines")
 
 [forced-hosts]
 # Configure your forced hosts here.
-"lobby.example.com" = [
-    "lobby"
-]
-"factions.example.com" = [
-    "factions"
-]
-"minigames.example.com" = [
-    "minigames"
-]
+#"lobby.example.com" = [
+#    "lobby"
+#]
+#"factions.example.com" = [
+#    "factions"
+#]
+#"minigames.example.com" = [
+#    "minigames"
+#]
 
 [advanced]
 # How large a Minecraft packet has to be before we compress it. Setting this to zero will
@@ -275,13 +285,6 @@ map = "Velocity"
 
 # Whether plugins should be shown in query response by default or not
 show-plugins = false
-
-[servers]
-$(printf '%b' "$servers_block")
-
-try = [
-$(printf '%b' "$try_lines")
-]
 EOF
 fi
 
@@ -324,4 +327,5 @@ else
 fi
 
 RAM=${MC_RAM:-2}
-exec java -Xmx${RAM}G -Xms1G -jar paper.jar nogui
+exec java -Xmx${RAM}G -Xms512M -jar velocity.jar nogui
+#exec java -Xms 512M -Xmx${RAM}G -XX:+UseG1GC -XX:G1HeapRegionSize=4M -XX:+UnlockExperimentalVMOptions -XX:+ParallelRefProcEnabled -XX:+AlwaysPreTouch -XX:MaxInlineLevel=15 -jar velocity.jar nogui

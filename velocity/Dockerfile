@@ -4,12 +4,14 @@ ENV enabled="true"
 ENV velocity_version="4.0.0"
 ENV MC_VERSION="1.21.11"
 
+ENV reset_toml="true"
+
 ENV servers_ports="survival:25567,creative:25566"
 
 #amount in GB minimum 1Gb
 ENV MC_RAM="1" 
 
-ENV port=25565
+ENV server_port=25565
 ENV rcon_port=25575
 
 ENV PROJECT_ID="Vebnzrzj"

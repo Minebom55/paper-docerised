@@ -10,7 +10,10 @@ services:
     #Set to false to disable the server
     #Also comment out port and rcon_port above
       - enabled="true"
+
+      - velocity_secret=osmjc1ePCtyo #Replace with your actual secret key for Velocity
     
+      - reset_paper_config="true"
       - port=25567
       - rcon_port=25575
       - MC_VERSION=1.21.11
@@ -31,7 +34,10 @@ services:
     #Also comment out port and rcon_port above
       - enabled="true"
 
-      - port=25566
+      - velocity_secret=osmjc1ePCtyo #Replace with your actual secret key for Velocity. located in mcseerver/velocity/forwarding.secret
+
+      - reset_paper_config="true"
+      - server_port=25566
       - rcon_port=25576
       - MC_VERSION=1.21.11
       #amount in GB minimum 1Gb
@@ -49,10 +55,11 @@ services:
     environment:
     #Set to false to disable the server
     #Also comment out port and rcon_port above
+      - reset_toml="true"
       - enabled="true"
 
       - servers_ports=survival:25567,creative:25566
-      - port=25566
+      - port=25565
 #      - rcon_port=25576
       - MC_VERSION=1.21.11
       - velocity_version=4.0.0
