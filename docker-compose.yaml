@@ -1,5 +1,6 @@
 services:
   survival:
+    stdin_open: true
     build: ./base
     volumes:
       - ./mcserver/survival:/docker/server
@@ -24,6 +25,7 @@ services:
       - MODRINTH_PROJECTS=Vebnzrzj,P1OZGk5p,GM9AuKjX
       
   creative:
+    stdin_open: true
     build: ./base
     volumes:
       - ./mcserver/creative:/docker/server
