@@ -4,6 +4,7 @@ services:
     build: ./base
     volumes:
       - ./mcserver/survival:/docker/server
+      - ./mcserver/custom_plugins/survival:/docker/custom_plugins
     ports:
       #- '25567:25567'
       - '25575:25575'
@@ -29,6 +30,7 @@ services:
     build: ./base
     volumes:
       - ./mcserver/creative:/docker/server
+      - ./mcserver/custom_plugins/creative:/docker/custom_plugins
     ports:
       #- '25566:25566'
       - '25576:25576'
@@ -53,6 +55,7 @@ services:
     build: ./velocity
     volumes:
       - ./mcserver/velocity:/docker/server
+      - ./mcserver/custom_plugins/velocity:/docker/custom_plugins 
     ports:
       - '25565:25565'
 #      - '25576:25576'

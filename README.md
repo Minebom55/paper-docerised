@@ -3,9 +3,13 @@
 ## Paper docerised
 
 Edit the docker-compose.yaml for settings
+Remember if you want more servers then predefined copy the compose form one of the servers (creative or survival) and paste it under. Remember to change the things like names of the server in volumes, service name, 
 start the server by using **docker compose up**
+(some times if the server dose not start or something needs a update you can run **docker compose up --build** to rebuild the image and update things.)
 
-Add a comma and the id of the plugins you want in the compose file to change what plugins are installed
+Add a comma and the id of the plugins you want in the compose file to change what plugins are installed.
+For plugins that do not exist on modrinth you can add them in /mcserver/custom_plugins/[servername]
+(*NOTE if you want to add custom plugins you need to start the server once so the folders generate)
 
 
 ## The two branches

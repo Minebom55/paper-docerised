@@ -287,6 +287,12 @@ fi
 #Plugin installation
 rm -f ./plugins/*.jar
 
+for plugin in /docker/custom_plugins/*.jar; do
+    [ -f "$plugin" ] || continue
+    echo "Copying custom plugin: $(basename "$plugin")"
+    cp "$plugin" ./plugins/
+done
+
 plugin_ids="${MODRINTH_PROJECTS:-$PROJECT_ID}"
 
 if [ -n "$plugin_ids" ]; then
