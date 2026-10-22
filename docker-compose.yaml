@@ -2,6 +2,7 @@ services:
   survival:
     stdin_open: true
     build: ./base
+    restart: on-failure
     volumes:
       - ./mcserver/survival:/docker/server
       - ./mcserver/custom_plugins/survival:/docker/custom_plugins
@@ -28,6 +29,7 @@ services:
   creative:
     stdin_open: true
     build: ./base
+    restart: on-failure
     volumes:
       - ./mcserver/creative:/docker/server
       - ./mcserver/custom_plugins/creative:/docker/custom_plugins
@@ -53,6 +55,7 @@ services:
 
   velocity:
     build: ./velocity
+    restart: on-failure
     volumes:
       - ./mcserver/velocity:/docker/server
       - ./mcserver/custom_plugins/velocity:/docker/custom_plugins 
