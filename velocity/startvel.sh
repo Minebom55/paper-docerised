@@ -305,7 +305,7 @@ if [ -n "$plugin_ids" ]; then
         echo "Checking Modrinth plugin: $project_id"
         loaders=$(printf '["velocity"]' | jq -sRr @uri)
         versions=$(printf '["%s"]' "$MC_VERSION" | jq -sRr @uri)
-        versiondata=$(curl -fsSL -s "https://api.modrinth.com/v3/project/$project_id/version?loaders=$loaders&game_versions=$versions&limit=1")
+        versiondata=$(curl -fsSL -A "Minebom55/velocity-docerised dev.minebom55@gmail.com" "https://api.modrinth.com/v3/project/$project_id/version?loaders=$loaders&game_versions=$versions&limit=1")
         pluginurl=$(echo "$versiondata" | jq -r '.[0].files[0].url')
         filename=$(echo "$versiondata" | jq -r '.[0].files[0].filename')
         returned_versions=$(echo "$versiondata" | jq -r '.[0].game_versions | join(",")')
@@ -320,7 +320,7 @@ if [ -n "$plugin_ids" ]; then
 
         echo "Downloading compatible plugin: $project_id"
         #echo "plugin URL: $pluginurl, filename: $filename" #Debuging
-        curl -fsSL "$pluginurl" -o "plugins/$filename"
+        curl -fsSL -A "Minebom55/velocity-docerised dev.minebom55@gmail.com" "$pluginurl" -o "plugins/$filename"
     done
 else
     echo "No Modrinth plugin IDs provided"
